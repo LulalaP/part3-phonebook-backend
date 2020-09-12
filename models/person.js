@@ -5,7 +5,7 @@ const url = process.env.MONGODB_URI
 
 console.log('connecting to', url, typeof(url))
 
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(url || 'mongodb://localhost:3001', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => {
     console.log('connected to MongoDB')
   })
