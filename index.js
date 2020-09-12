@@ -43,10 +43,13 @@ app.get('/api/persons/:id', (request, response, next) => {
   })
 
 app.get('/info', (request, response) => {
-    response.send(`
-        <p>Phonebook has info for ${persons.length} people</p>
+    Person.countDocuments({ }, function (err, count) {
+      response.send(`
+        <p>Phonebook has info for ${count} people</p>
         <p>${new Date()}</p>
-    `)
+      `)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -59,16 +62,11 @@ app.delete('/api/persons/:id', (request, response) => {
     .catch(error => next(error))
   })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
     if (!body.name) {
       return response.status(400).json({ 
         error: 'person missing' 
-      })
-    }
-    if (persons.find(element => element.name === body.name)){
-      return response.status(400).json({ 
-        error: 'name must be unique' 
       })
     }
     const person = new Person({
@@ -81,6 +79,7 @@ app.post('/api/persons', (request, response) => {
       console.log(`id: ${person.id}`)
       response.json(savedPerson.toJSON())
     })
+    .catch(error => next(error))
   })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -109,7 +108,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError' && error.kind == 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
