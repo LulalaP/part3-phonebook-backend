@@ -73,11 +73,6 @@ app.post('/api/persons', (request, response, next) => {
       name: body.name,
       number: body.number
     })
-  // if (persons.find(element => element.name === body.name)){
-  //   return response.status(400).json({ 
-  //     error: 'name must be unique' 
-  //   })
-  // }
     person.save().then(savedPerson => {
       console.log(`added ${body.name} ${body.number} to phonebook`)
       console.log(`id: ${person.id}`)
