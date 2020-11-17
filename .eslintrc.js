@@ -5,7 +5,7 @@ module.exports = {
         'node': true
     },
     // 'extends': 'eslint:recommended',
-    'extends': ['airbnb', "airbnb/hooks"],
+    'extends': 'airbnb',
     'globals': {
         'Atomics': 'readonly',
         'SharedArrayBuffer': 'readonly'
